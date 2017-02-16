@@ -46,4 +46,3 @@ spec:
           timeoutSeconds: 5
         resources:
 {{ toYaml .Values.proxy.resources | indent 10 }}
-
