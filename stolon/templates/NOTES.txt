@@ -1,0 +1,10 @@
+Helm cluster needs to be initialized before use.
+Wait until etcd/consul cluster became available and run:
+
+ kubectl run {{ template "fullname" . }} --rm --tty -i --image={{ .Values.image }}:{{ .Values.imageTag }} \
+  --command -- \
+  stolonctl --cluster-name={{ .Values.clusterName }} \
+  --store-backend={{ .Values.store.backend }} \
+  --store-endpoints={{ template "store.endpoint" . }} \
+  init
+

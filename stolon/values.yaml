@@ -1,0 +1,100 @@
+# Default values for Stolon Helm Chart.
+# This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
+
+## Override the name of the Chart.
+##
+# nameOverride:
+
+## Stolon image.
+##
+
+image: "sorintlab/stolon"
+
+## Stolon image version.
+## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
+##
+imageTag: "v0.5.0-pg9.6"
+
+## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
+## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+##
+# imagePullPolicy:
+
+## Configuration values for Stolon.
+
+clusterName: "kube-stolon"
+debug: false
+
+
+store:
+  backend: "etcd"
+
+
+pgReplUsername: "repluser"
+pgReplPassword: "replPassword"
+pgSuperuserName: "stolon"
+
+## set password for the superuser
+## default is 15 random chars
+# pgSuperuserPasword: ""
+
+sentinel:
+  replicas: 2
+
+  ## Configure resource requests and limits.
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+
+
+proxy:
+  replicas: 2
+  ## Set serviceType to nodePort if needed
+  # serviceType:
+
+  ## Configure resource requests and limits.
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+
+keeper:
+  replicas: 2
+
+  ## Configure resource requests and limits.
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+
+## Persistent Volume Storage configuration.
+## ref: https://kubernetes.io/docs/user-guide/persistent-volumes
+##
+
+persistence:
+  ## Enable persistence using Persistent Volume Claims.
+  ##
+  enabled: false
+
+  ## Persistent Volume Storage Class.
+  ##
+  # class:
+
+  ## Persistent Volume Access Mode.
+  ##
+  accessMode: ReadWriteOnce
+
+  ## Persistent Volume Storage Size.
+  ##
+  size: 10Gi
