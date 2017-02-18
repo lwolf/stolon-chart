@@ -28,7 +28,20 @@ debug: false
 
 
 store:
+  ##  Backend could be one of the following:
+  ## - etcd
+  ## - consul (not supported yet)
   backend: "etcd"
+
+etcd:
+  ## use etcd as backend
+  enabled: true
+  ## managed mode means that service will be deployed as part of the chart as a dependency
+  # managed: true
+  persistence:
+    enabled: true
+    classVersion: beta
+    class: slow
 
 
 pgReplUsername: "repluser"
@@ -40,7 +53,7 @@ pgSuperuserName: "stolon"
 # pgSuperuserPasword: ""
 
 sentinel:
-  replicas: 2
+  replicas: 3
 
   ## Configure resource requests and limits.
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -53,9 +66,10 @@ sentinel:
 
 
 proxy:
-  replicas: 2
+  replicas: 3
   ## Set serviceType to nodePort if needed
-  # serviceType:
+  ## proxy is used to route RW requests to the master
+  # serviceType: NodePort
 
   ## Configure resource requests and limits.
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -67,7 +81,10 @@ proxy:
       memory: "512Mi"
 
 keeper:
-  replicas: 2
+  replicas: 3
+  ## Set serviceType to nodePort if needed
+  ## keeper service is used to route RO requests to all nodes
+  # serviceType: NodePort
 
   ## Configure resource requests and limits.
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -87,9 +104,12 @@ persistence:
   ##
   enabled: false
 
+  ## Persistent Volume Storage Class Version.
+  ##
+  classVersion: beta
   ## Persistent Volume Storage Class.
   ##
-  # class:
+  class: slow
 
   ## Persistent Volume Access Mode.
   ##

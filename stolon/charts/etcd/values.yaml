@@ -29,6 +29,10 @@ resources:
 ##
 
 persistence:
+  ## Enable persistence using Persistent Volume Claims.
+  ##
+  enabled: false
+
   classVersion: alpha
   ## Persistent Volume Storage Class.
   ##

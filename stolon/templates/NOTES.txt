@@ -1,10 +1,14 @@
 Helm cluster needs to be initialized before use.
 Wait until etcd/consul cluster became available and run:
 
- kubectl run {{ template "fullname" . }} --rm --tty -i --image={{ .Values.image }}:{{ .Values.imageTag }} \
+ kubectl run {{ template "fullname" . }} --rm --tty -i \
+  --image={{ .Values.image }}:{{ .Values.imageTag }} \
+  --namespace {{ .Release.Namespace }} \
   --command -- \
   stolonctl --cluster-name={{ .Values.clusterName }} \
   --store-backend={{ .Values.store.backend }} \
   --store-endpoints={{ template "store.endpoint" . }} \
   init
 
+To get superuser password run
+    PGPASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "fullname" . }} -o jsonpath="{.data.password}" | base64 --decode; echo)

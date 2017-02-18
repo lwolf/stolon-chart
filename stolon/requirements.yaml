@@ -2,3 +2,4 @@ dependencies:
 - name: etcd
   version: 0.1.2
   repository: http://storage.googleapis.com/kubernetes-charts-incubator
+  condition: etcd.enabled,global.etcd.enabled
