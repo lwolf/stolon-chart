@@ -26,6 +26,6 @@ After it will be merged, etcd will be removed from the source.
 
 
 ## Known issues
-* etcd from the incubator(and the copy here) has problems with **scale down** and re-joining fallen pods.
+* etcd from the incubator(and the copy here) has problems with **scale down** and re-joining fallen pods. [#685](https://github.com/kubernetes/charts/issues/685)
 
  
