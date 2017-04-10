@@ -21,6 +21,7 @@ After it will be merged, etcd will be removed from the source.
 ## TODO:
 - [x] automate initial stolon cluster creating
 - [ ] Managed and standalone mode for etcd
+- [ ] Try to integrate etcd operator
 - [ ] Add support for consul backend
 - [ ] Conditional dependencies to be able to use either etcd or consul
 
