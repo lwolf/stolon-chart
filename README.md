@@ -13,7 +13,7 @@ After it will be merged, etcd will be removed from the source.
 
 
 ## Requirements
-* Kubernetes 1.5 (for `StatefulSets` support)
+* Kubernetes >1.5, <1.6
 * PV support on the underlying infrastructure
 * Helm 2.2.0 (for `conditions and flags` support)
 
@@ -24,6 +24,7 @@ After it will be merged, etcd will be removed from the source.
 - [ ] Try to integrate etcd operator
 - [ ] Add support for consul backend
 - [ ] Conditional dependencies to be able to use either etcd or consul
+- [ ] Add support for 1.6
 
 
 ## Known issues
