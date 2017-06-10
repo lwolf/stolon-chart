@@ -23,10 +23,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name .Values.store.backend | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "store.endpoint" -}}
-{{- printf "http://%s-%s:2379" .Release.Name .Values.store.backend -}}
-{{- end -}}
-
 
 {{- define "keeper.fullname" -}}
 {{- $serviceName := default "keeper" .Values.keeper.nameOverride -}}

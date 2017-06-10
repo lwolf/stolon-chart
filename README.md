@@ -8,23 +8,18 @@
 Chart is partially based on the statefullset example from the [stolon repo](https://github.com/sorintlab/stolon/tree/master/examples/kubernetes/statefulset)
 
 Currently only etcd backend is supported.
-Etcd is based on [chart from incubator](https://github.com/kubernetes/charts/tree/master/incubator/etcd) with updates to support 1.5 statefulset (PR pending).
-After it will be merged, etcd will be removed from the source. 
-
 
 ## Requirements
-* Kubernetes >1.5, <1.6
+* Kubernetes >1.5
 * PV support on the underlying infrastructure
 * Helm 2.2.0 (for `conditions and flags` support)
 
 
 ## TODO:
-- [x] automate initial stolon cluster creating
-- [ ] Managed and standalone mode for etcd
-- [ ] Try to integrate etcd operator
+- [X] Automate initial stolon cluster creating
+- [X] Do not manage etcd dependency, do not rely on etcd chart
 - [ ] Add support for consul backend
-- [ ] Conditional dependencies to be able to use either etcd or consul
-- [ ] Add support for 1.6
+- [X] Add support for 1.6
 
 
 ## Known issues

@@ -14,7 +14,7 @@ image: "sorintlab/stolon"
 ## Stolon image version.
 ## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
 ##
-imageTag: "v0.5.0-pg9.6"
+imageTag: "v0.6.0-pg9.6"
 
 ## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
 ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -30,19 +30,10 @@ debug: false
 store:
   ##  Backend could be one of the following:
   ## - etcd
-  ## - consul (not supported yet)
+  ## - consul (should work, but not tested yet)
   backend: "etcd"
-
-etcd:
-  ## use etcd as backend
-  enabled: true
-  ## managed mode means that service will be deployed as part of the chart as a dependency
-  # managed: true
-  persistence:
-    enabled: true
-    classVersion: beta
-    class: slow
-
+  ## store endpoints MUST be set!
+  endpoints: "http://etcd-01:2379,http://etcd-02:2379"
 
 pgReplUsername: "repluser"
 pgReplPassword: "replPassword"

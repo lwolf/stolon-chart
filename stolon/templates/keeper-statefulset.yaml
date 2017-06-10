@@ -43,7 +43,7 @@ spec:
           - name: STKEEPER_STORE_BACKEND
             value: {{ .Values.store.backend  | quote}}
           - name: STKEEPER_STORE_ENDPOINTS
-            value: {{ template "store.endpoint" . }}
+            value: {{ .Values.store.endpoints | quote}}
           - name: STKEEPER_PG_REPL_USERNAME
             value: {{ .Values.pgReplUsername  | quote}}
           - name: STKEEPER_PG_REPL_PASSWORD

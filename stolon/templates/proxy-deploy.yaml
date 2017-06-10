@@ -34,7 +34,7 @@ spec:
           - name: STPROXY_STORE_BACKEND
             value: {{ .Values.store.backend | quote}}
           - name: STPROXY_STORE_ENDPOINTS
-            value: {{ template "store.endpoint" . }}
+            value: {{ .Values.store.endpoints | quote }}
           - name: STPROXY_LISTEN_ADDRESS
             value: {{ default "0.0.0.0" .Values.proxy.listenAddress | quote }}
           - name: STSENTINEL_DEBUG

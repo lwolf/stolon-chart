@@ -34,7 +34,7 @@ spec:
           - name: STSENTINEL_STORE_BACKEND
             value: {{ .Values.store.backend | quote}}
           - name: STSENTINEL_STORE_ENDPOINTS
-            value: {{ template "store.endpoint" . }}
+            value: {{ .Values.store.endpoints | quote}}
           - name: STSENTINEL_DEBUG
             value: {{ .Values.debug | quote}}
         resources:
