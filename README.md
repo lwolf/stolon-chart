@@ -26,3 +26,8 @@ Currently only etcd backend is supported.
 * etcd from the incubator(and the copy here) has problems with **scale down** and re-joining fallen pods. [#685](https://github.com/kubernetes/charts/issues/685)
 
  
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/lwolf/stolon-chart/badge.svg?style=beer-square)](https://beerpay.io/lwolf/stolon-chart)  [![Beerpay](https://beerpay.io/lwolf/stolon-chart/make-wish.svg?style=flat-square)](https://beerpay.io/lwolf/stolon-chart?focus=wish)
