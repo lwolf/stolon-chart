@@ -51,13 +51,15 @@ The following tables lists the configurable parameters of the helm chart and the
 | `sentinel.resources`       | Sentinel resource requests/limit           | Memory: `256Mi`, CPU: `100m`                               |
 | `proxy.replicas`           | Proxy number of replicas                   | `2`                                                        |
 | `proxy.resources`          | Proxy resource requests/limit              | Memory: `256Mi`, CPU: `100m`                               |
-| `proxy.serviceType`        | Proxy service type                         | `nil`                                                        |
+| `proxy.serviceType`        | Proxy service type                         | `nil`                                                      |
 | `keeper.replicas`          | Keeper number of replicas                  | `2`                                                        |
+| `keeper.client_ssl.enabled`| Enable ssl encryption                      | `false`                                                    |
+| `keeper.client_ssl.certs_secret_name`| The secret for server.crt and server.key   | `pg-cert-secret`                                 |
 | `keeper.resources`         | Keeper resource requests/limit             | Memory: `256Mi`, CPU: `100m`                               |
-| `persistence.enabled`      | Use a PVC to persist data                  | `false`                                                     |
+| `persistence.enabled`      | Use a PVC to persist data                  | `false`                                                    |
 | `persistence.storageClass` | Storage class of backing PVC               | `nil` (uses alpha storage class annotation)                |
 | `persistence.accessMode`   | Use volume as ReadOnly or ReadWrite        | `ReadWriteOnce`                                            |
-| `persistence.size`         | Size of data volume                        | `10Gi`                                                      |
+| `persistence.size`         | Size of data volume                        | `10Gi`                                                     |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
@@ -70,3 +72,9 @@ $ helm install --name my-release -f values.yaml .
 ## Persistence
 
 The chart mounts a [Persistent Volume](http://kubernetes.io/docs/user-guide/persistent-volumes/) volume at this location. The volume is created using dynamic volume provisioning.
+
+## SSL
+To enable encrypted traffic, create certificates according to these instructions: https://www.postgresql.org/docs/9.6/static/ssl-tcp.html
+The secret should hold servert.crt and server.key are required, by that name. For your convenience a [script](/scripts/create_pg_secret.sh) is included to create the secret in the cluster.
+
+The use of **Client Certificates** is not supported

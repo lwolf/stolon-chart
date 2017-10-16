@@ -40,5 +40,8 @@ spec:
           - --store-backend={{ .Values.store.backend }}
           - --store-endpoints={{ .Values.store.endpoints }}
           - --yes
+  {{- if .Values.keeper.client_ssl.enabled }}
+          - '{  "initMode": "new", "pgParameters": { "ssl": "on", "ssl_cert_file": "/etc/secrets/ssl/server.crt", "ssl_key_file": "/etc/secrets/ssl/server.key"{{ if .Values.slow_queries.enabled }} {{ end }} } }'
+  {{- end }}
 {{ end }}
 
