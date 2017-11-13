@@ -26,6 +26,11 @@ imageTag: "v0.6.0-pg9.6"
 clusterName: "kube-stolon"
 debug: false
 
+## log slow queries
+# disabled by default
+slow_queries:
+  enabled: false
+  min_duration: 300
 
 store:
   ##  Backend could be one of the following:
