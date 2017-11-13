@@ -82,6 +82,14 @@ keeper:
   ## keeper service is used to route RO requests to all nodes
   # serviceType: NodePort
 
+  ## configure ssl for client access
+  # create certificates according to these instructions: https://www.postgresql.org/docs/9.6/static/ssl-tcp.html
+  # to enable encrypted traffic, servert.crt and server.key are required, by that name.
+  # the use of ** Client Certificates ** is not supported
+  client_ssl:
+    enabled: false
+    certs_secret_name: pg-cert-secret
+
   ## Configure resource requests and limits.
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ##

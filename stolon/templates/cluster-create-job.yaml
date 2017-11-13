@@ -40,8 +40,7 @@ spec:
           - --store-backend={{ .Values.store.backend }}
           - --store-endpoints={{ .Values.store.endpoints }}
           - --yes
-  {{- if .Values.slow_queries.enabled }}
-          - '{  "initMode": "new", "pgParameters": { "log_min_duration_statement" :  "{{ .Values.slow_queries.min_duration }}" } }'
+          - '{  "initMode": "new", "pgParameters": { {{- if .Values.keeper.client_ssl.enabled }} "ssl": "on", "ssl_cert_file": "/etc/secrets/ssl/server.crt", "ssl_key_file": "/etc/secrets/ssl/server.key"{{- end }},{{ if .Values.slow_queries.enabled }} "log_min_duration_statement" :  "{{ .Values.slow_queries.min_duration }}" {{ end }} } }'
   {{- end }}
 {{ end }}
 
