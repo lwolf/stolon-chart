@@ -1,28 +1,61 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: {{ template "keeper.fullname" . }}
+  name: {{ template "stolon.keeper.fullname" . }}
   labels:
-    app: {{ template "keeper.fullname" . }}
+    app: {{ template "stolon.keeper.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    component: keeper
 spec:
-  serviceName: {{ template "keeper.fullname" . }}
+  serviceName: {{ template "stolon.keeper.fullname" . }}
   replicas: {{ .Values.keeper.replicas }}
   template:
     metadata:
       labels:
-        app: {{ template "keeper.fullname" . }}
+        app: {{ template "stolon.keeper.fullname" . }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
+        component: keeper
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"
     spec:
       terminationGracePeriodSeconds: 10
+{{- if .Values.keeper.antiAffinity.enabled }}
+      affinity:
+        podAntiAffinity:
+  {{- $antiAffinityType := default "hard" .Values.keeper.antiAffinity.type | lower -}}
+  {{- if eq $antiAffinityType "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  name: {{ template "stolon.keeper.fullname" . }}
+  {{- else if eq $antiAffinityType "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    name: {{ template "stolon.keeper.fullname" . }}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.keeper.nodeSelector }}
+      nodeSelector:
+  {{ toYaml .Values.keeper.nodeSelector | indent 8 }}
+{{- end }}
+
+{{- if .Values.keeper.tolerations }}
+      tolerations:
+  {{ toYaml .Values.keeper.tolerations | indent 8 }}
+{{- end }}
+
       containers:
-      - name: stolon-keeper
+      - name: {{ template "stolon.keeper.fullname" . }}
         image: "{{ .Values.image }}:{{ .Values.imageTag }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         command:
@@ -46,45 +79,44 @@ spec:
             value: {{ .Values.store.endpoints | quote}}
           - name: STKEEPER_PG_REPL_USERNAME
             value: {{ .Values.pgReplUsername  | quote}}
-          - name: STKEEPER_PG_REPL_PASSWORD
-            value: {{ .Values.pgReplPassword  | quote}}
+          - name: STKEEPER_PG_REPL_PASSWORDFILE
+            value: "/etc/secrets/stolon/pg_repl_password"
           - name: STKEEPER_PG_SU_USERNAME
             value: {{ .Values.pgSuperuserName  | quote}}
           - name: STKEEPER_PG_SU_PASSWORDFILE
-            value: "/etc/secrets/stolon/password"
+            value: "/etc/secrets/stolon/pg_su_password"
           - name: STSENTINEL_DEBUG
             value: {{ .Values.debug | quote}}
         ports:
-          - containerPort: 5432
+          - containerPort: {{ .Values.ports.internalPort }}
         volumeMounts:
-        - mountPath: /stolon-data
-          name: data
-        - mountPath: /etc/secrets/stolon
-          name: stolon
+        - name: stolon-data
+          mountPath: /stolon-data
+        - name: stolon-secrets
+          mountPath: /etc/secrets/stolon
         resources:
 {{ toYaml .Values.keeper.resources | indent 10 }}
       volumes:
-        - name: stolon
+        - name: stolon-secrets
           secret:
-            secretName: {{ template "fullname" . }}
+            secretName: {{ template "stolon.fullname" . }}
 
 {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
-        name: data
-        annotations:
-          {{- if .Values.persistence.class }}
-          volume.beta.kubernetes.io/storage-class: {{ .Values.persistence.class | quote }}
-          {{- else }}
-          volume.alpha.kubernetes.io/storage-class: default
-          {{- end }}
+        name: stolon-data
       spec:
         accessModes:
           - {{ .Values.persistence.accessMode | quote }}
         resources:
           requests:
             storage: {{ .Values.persistence.size }}
+  {{- if .Values.persistence.storageClassName }}
+        storageClassName: {{ .Values.persistence.storageClassName | quote }}
+    {{- else }}
+        storageClassName: standard
+  {{- end }}
 {{- else }}
-        - name: data
+        - name: stolon-data
           emptyDir: {}
 {{- end }}

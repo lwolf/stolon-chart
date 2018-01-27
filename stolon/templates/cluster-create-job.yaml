@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "stolon.fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "stolon.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: {{ template "stolon.fullname" . }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
@@ -30,7 +30,7 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-      - name: {{ template "fullname" . }}
+      - name: {{ template "stolon.fullname" . }}
         image: "{{ .Values.image }}:{{ .Values.imageTag }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         command: ["/usr/local/bin/stolonctl"]
@@ -40,6 +40,6 @@ spec:
           - --store-backend={{ .Values.store.backend }}
           - --store-endpoints={{ .Values.store.endpoints }}
           - --yes
-          - '{  "initMode": "new", "pgParameters": { {{- if .Values.keeper.client_ssl.enabled }} "ssl": "on", "ssl_cert_file": "/etc/secrets/ssl/server.crt", "ssl_key_file": "/etc/secrets/ssl/server.key"{{- end }},{{ if .Values.slow_queries.enabled }} "log_min_duration_statement" :  "{{ .Values.slow_queries.min_duration }}" {{ end }} } }'
+          - '{  "initMode": "new"{{- if or .Values.keeper.client_ssl.enabled .Values.slow_queries.enabled }}, "pgParameters": { {{- if .Values.keeper.client_ssl.enabled }} "ssl": "on", "ssl_cert_file": "/etc/secrets/ssl/server.crt", "ssl_key_file": "/etc/secrets/ssl/server.key"{{- end }}{{- if and .Values.keeper.client_ssl.enabled .Values.slow_queries.enabled }},{{- end }}{{ if .Values.slow_queries.enabled }} "log_min_duration_statement" :  "{{ .Values.slow_queries.min_duration }}" {{ end }} }{{- end}} }'
 {{ end }}
 

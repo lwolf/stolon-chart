@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "name" -}}
+{{- define "stolon.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -10,7 +10,7 @@ Expand the name of the chart.
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "fullname" -}}
+{{- define "stolon.fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -19,24 +19,24 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Create a default fully qualified store name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "store.fullname" -}}
+{{- define "stolon.store.fullname" -}}
 {{- printf "%s-%s" .Release.Name .Values.store.backend | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 
-{{- define "keeper.fullname" -}}
+{{- define "stolon.keeper.fullname" -}}
 {{- $serviceName := default "keeper" .Values.keeper.nameOverride -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s-%s" .Release.Name $name $serviceName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "sentinel.fullname" -}}
+{{- define "stolon.sentinel.fullname" -}}
 {{- $serviceName := default "sentinel" .Values.sentinel.nameOverride -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s-%s" .Release.Name $name $serviceName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "proxy.fullname" -}}
+{{- define "stolon.proxy.fullname" -}}
 {{- $serviceName := default "proxy" .Values.proxy.nameOverride -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s-%s" .Release.Name $name $serviceName | trunc 63 | trimSuffix "-" -}}
