@@ -20,35 +20,20 @@ spec:
         component: proxy
         stolon-cluster: {{ .Values.clusterName }}
     spec:
-{{- if .Values.proxy.antiAffinity.enabled }}
+
+{{- if .Values.proxy.affinity }}
       affinity:
-        podAntiAffinity:
-  {{- $antiAffinityType := default "hard" .Values.proxy.antiAffinity.type | lower -}}
-  {{- if eq $antiAffinityType "hard" }}
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-                  name: {{ template "stolon.proxy.fullname" . }}
-  {{- else if eq $antiAffinityType "soft" }}
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    name: {{ template "stolon.proxy.fullname" . }}
-  {{- end }}
+{{ toYaml .Values.proxy.affinity | indent 8 }}
 {{- end }}
 
 {{- if .Values.proxy.nodeSelector }}
       nodeSelector:
-  {{ toYaml .Values.proxy.nodeSelector | indent 8 }}
+{{ toYaml .Values.proxy.nodeSelector | indent 8 }}
 {{- end }}
 
 {{- if .Values.proxy.tolerations }}
       tolerations:
-  {{ toYaml .Values.proxy.tolerations | indent 8 }}
+{{ toYaml .Values.proxy.tolerations | indent 8 }}
 {{- end }}
 
       containers:

@@ -67,13 +67,13 @@ sentinel:
       cpu: "100m"
       memory: "512Mi"
 
-  ## Configure affinity.
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## Configure nodeSelector, tolerations and affinity.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
   ##
 
-  antiAffinity:
-    enabled: true
-    type: hard
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
 
 proxy:
   replicas: 3
@@ -90,13 +90,13 @@ proxy:
       cpu: "100m"
       memory: "512Mi"
 
-  ## Configure affinity.
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## Configure nodeSelector, tolerations and affinity.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
   ##
 
-  antiAffinity:
-    enabled: true
-    type: hard
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
 
 keeper:
   replicas: 3
@@ -121,13 +121,13 @@ keeper:
       cpu: "100m"
       memory: "512Mi"
 
-  ## Configure affinity.
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## Configure nodeSelector, tolerations and affinity.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
   ##
 
-  antiAffinity:
-    enabled: true
-    type: hard
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
 
 ## Persistent Volume Storage configuration.
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes
@@ -137,13 +137,6 @@ persistence:
   ## Enable persistence using Persistent Volume Claims.
   ##
   enabled: false
-
-  ## Persistent Volume Storage Class Version.
-  ##
-  classVersion: beta
-  ## Persistent Volume Storage Class.
-  ##
-  class: slow
 
   ## Persistent Volume Access Mode.
   ##

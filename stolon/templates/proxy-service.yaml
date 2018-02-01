@@ -16,5 +16,5 @@ spec:
     - port: {{ .Values.ports.externalPort }}
       targetPort: {{ .Values.ports.internalPort }}
   selector:
-    componenet: proxy
+    component: proxy
     stolon-cluster: {{ .Values.clusterName }}

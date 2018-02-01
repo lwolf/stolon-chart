@@ -21,35 +21,20 @@ spec:
         stolon-cluster: {{ .Values.clusterName | quote}}
         stolon-sentinel: "true"
     spec:
-{{- if .Values.sentinel.antiAffinity.enabled }}
+
+{{- if .Values.sentinel.affinity }}
       affinity:
-        podAntiAffinity:
-  {{- $antiAffinityType := default "hard" .Values.sentinel.antiAffinity.type | lower -}}
-  {{- if eq $antiAffinityType "hard" }}
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-                  name: {{ template "stolon.sentinel.fullname" . }}
-  {{- else if eq $antiAffinityType "soft" }}
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    name: {{ template "stolon.sentinel.fullname" . }}
-  {{- end }}
+{{ toYaml .Values.sentinel.affinity | indent 8 }}
 {{- end }}
 
 {{- if .Values.sentinel.nodeSelector }}
       nodeSelector:
-  {{ toYaml .Values.sentinel.nodeSelector | indent 8 }}
+{{ toYaml .Values.sentinel.nodeSelector | indent 8 }}
 {{- end }}
 
 {{- if .Values.sentinel.tolerations }}
       tolerations:
-  {{ toYaml .Values.sentinel.tolerations | indent 8 }}
+{{ toYaml .Values.sentinel.tolerations | indent 8 }}
 {{- end }}
 
       containers:
@@ -71,4 +56,4 @@ spec:
           - name: STSENTINEL_DEBUG
             value: {{ .Values.debug | quote}}
         resources:
-{{ toYaml .Values.keeper.resources | indent 10 }}
+{{ toYaml .Values.sentinel.resources | indent 10 }}

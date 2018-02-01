@@ -23,35 +23,20 @@ spec:
         pod.alpha.kubernetes.io/initialized: "true"
     spec:
       terminationGracePeriodSeconds: 10
-{{- if .Values.keeper.antiAffinity.enabled }}
+
+{{- if .Values.keeper.affinity }}
       affinity:
-        podAntiAffinity:
-  {{- $antiAffinityType := default "hard" .Values.keeper.antiAffinity.type | lower -}}
-  {{- if eq $antiAffinityType "hard" }}
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-                  name: {{ template "stolon.keeper.fullname" . }}
-  {{- else if eq $antiAffinityType "soft" }}
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    name: {{ template "stolon.keeper.fullname" . }}
-  {{- end }}
+{{ toYaml .Values.keeper.affinity | indent 8 }}
 {{- end }}
 
 {{- if .Values.keeper.nodeSelector }}
       nodeSelector:
-  {{ toYaml .Values.keeper.nodeSelector | indent 8 }}
+{{ toYaml .Values.keeper.nodeSelector | indent 8 }}
 {{- end }}
 
 {{- if .Values.keeper.tolerations }}
       tolerations:
-  {{ toYaml .Values.keeper.tolerations | indent 8 }}
+{{ toYaml .Values.keeper.tolerations | indent 8 }}
 {{- end }}
 
       containers:
@@ -114,7 +99,7 @@ spec:
   {{- if .Values.persistence.storageClassName }}
         storageClassName: {{ .Values.persistence.storageClassName | quote }}
     {{- else }}
-        storageClassName: standard
+        storageClassName: default
   {{- end }}
 {{- else }}
         - name: stolon-data
