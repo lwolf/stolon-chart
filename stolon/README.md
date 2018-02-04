@@ -35,31 +35,40 @@ $ helm install --name my-release .
 
 The following tables lists the configurable parameters of the helm chart and their default values.
 
-| Parameter                  | Description                                | Default                                                    |
-| -----------------------    | ----------------------------------         | ---------------------------------------------------------- |
-| `image`                    | `stolon` image repository                  | `sorintlab/stolon`                                         |
-| `imageTag`                 | `stolon` image tag                         | `v0.5.0-pg9.6`                                             |
-| `imagePullPolicy`          | Image pull policy                          | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
-| `clusterName`              | Name of the cluster                        | `kube-stolon`                                              |
-| `debug`                    | Debug mode                                 | `false`                                                    |
-| `store.backend`            | Store backend to use (etcd/consul)         | `etcd`                                                     |
-| `pgReplUsername`           | Repl username                              | `repluser`                                                 |
-| `pgReplPassword`           | Repl password                              | `replPassword`                                             |
-| `pgSuperuserName`          | Postgres Superuser name                    | `stolon`                                                   |
-| `pgSuperuserPasword`       | Postgres Superuser password                | random 10 characters                                       |
-| `sentinel.replicas`        | Sentinel number of replicas                | `2`                                                        |
-| `sentinel.resources`       | Sentinel resource requests/limit           | Memory: `256Mi`, CPU: `100m`                               |
-| `proxy.replicas`           | Proxy number of replicas                   | `2`                                                        |
-| `proxy.resources`          | Proxy resource requests/limit              | Memory: `256Mi`, CPU: `100m`                               |
-| `proxy.serviceType`        | Proxy service type                         | `nil`                                                      |
-| `keeper.replicas`          | Keeper number of replicas                  | `2`                                                        |
-| `keeper.client_ssl.enabled`| Enable ssl encryption                      | `false`                                                    |
-| `keeper.client_ssl.certs_secret_name`| The secret for server.crt and server.key   | `pg-cert-secret`                                 |
-| `keeper.resources`         | Keeper resource requests/limit             | Memory: `256Mi`, CPU: `100m`                               |
-| `persistence.enabled`      | Use a PVC to persist data                  | `false`                                                    |
-| `persistence.storageClass` | Storage class of backing PVC               | `nil` (uses alpha storage class annotation)                |
-| `persistence.accessMode`   | Use volume as ReadOnly or ReadWrite        | `ReadWriteOnce`                                            |
-| `persistence.size`         | Size of data volume                        | `10Gi`                                                     |
+| Parameter                               | Description                                    | Default                                                      |
+| --------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------ |
+| `image`                                 | `stolon` image repository                      | `sorintlab/stolon`                                           |
+| `imageTag`                              | `stolon` image tag                             | `v0.7.0-pg9.6`                                               |
+| `imagePullPolicy`                       | Image pull policy                              | `Always` if `imageTag` is `latest`, else `IfNotPresent`      |
+| `clusterName`                           | Name of the cluster                            | `kube-stolon`                                                |
+| `debug`                                 | Debug mode                                     | `false`                                                      |
+| `store.backend`                         | Store backend to use (etcd/consul)             | `etcd`                                                       |
+| `store.endpoints`                       | Store backend endpoints                        | `http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379`   |
+| `pgReplUsername`                        | Repl username                                  | `repluser`                                                   |
+| `pgReplPassword`                        | Repl password                                  | random 40 characters                                         |
+| `pgSuperuserName`                       | Postgres Superuser name                        | `stolon`                                                     |
+| `pgSuperuserPassword`                   | Postgres Superuser password                    | random 40 characters                                         |
+| `sentinel.replicas`                     | Number of sentinel nodes                       | `2`                                                          |
+| `sentinel.resources`                    | Sentinel resource requests/limit               | Memory: `256Mi`, CPU: `100m`                                 |
+| `sentinel.affinity`                     | Affinity settings for sentinel pod assignment  | `{}`                                                         |
+| `sentinel.nodeSelector`                 | Node labels for sentinel pod assignment        | `{}`                                                         |
+| `sentinel.tolerations`                  | Toleration labels for sentinel pod assignment  | `[]`                                                         |
+| `proxy.replicas`                        | Number of proxy nodes                          | `2`                                                          |
+| `proxy.resources`                       | Proxy resource requests/limit                  | Memory: `256Mi`, CPU: `100m`                                 |
+| `proxy.affinity`                        | Affinity settings for proxy pod assignment     | `{}`                                                         |
+| `proxy.nodeSelector`                    | Node labels for proxy pod assignment           | `{}`                                                         |
+| `proxy.tolerations`                     | Toleration labels for proxy pod assignment     | `[]`                                                         |
+| `keeper.replicas`                       | Number of keeper nodes                         | `2`                                                          |
+| `keeper.resources`                      | Keeper resource requests/limit                 | Memory: `256Mi`, CPU: `100m`                                 |
+| `keeper.affinity`                       | Affinity settings for keeper pod assignment    | `{}`                                                         |
+| `keeper.nodeSelector`                   | Node labels for keeper pod assignment          | `{}`                                                         |
+| `keeper.tolerations`                    | Toleration labels for keeper pod assignment    | `[]`                                                         |
+| `keeper.client_ssl.enabled`             | Enable ssl encryption                          | `false`                                                      |
+| `keeper.client_ssl.certs_secret_name`   | The secret for server.crt and server.key       | `pg-cert-secret`                                             |
+| `persistence.enabled`                   | Use a PVC to persist data                      | `false`                                                      |
+| `persistence.storageClassName`          | Storage class name of backing PVC              | `standard`                                                   |
+| `persistence.accessMode`                | Use volume as ReadOnly or ReadWrite            | `ReadWriteOnce`                                              |
+| `persistence.size`                      | Size of data volume                            | `10Gi`                                                       |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

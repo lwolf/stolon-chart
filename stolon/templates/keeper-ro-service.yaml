@@ -1,18 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "keeper.fullname" . }}
+  name: {{ template "stolon.keeper.fullname" . }}
   labels:
-    app: {{ template "keeper.fullname" . }}
+    app: {{ template "stolon.keeper.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    component: keeper
 spec:
   {{ if .Values.keeper.serviceType }}
   type: {{ .Values.keeper.serviceType }}
   {{ end }}
   ports:
-    - port: 5432
-      targetPort: 5432
+    - port: {{ .Values.ports.externalPort }}
+      targetPort: {{ .Values.ports.internalPort }}
   selector:
-    app: {{ template "keeper.fullname" . }}
+    app: {{ template "stolon.keeper.fullname" . }}
+    component: keeper

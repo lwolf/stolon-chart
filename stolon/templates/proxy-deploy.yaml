@@ -1,26 +1,43 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "proxy.fullname" . }}
+  name: {{ template "stolon.proxy.fullname" . }}
   labels:
-    app: {{ template "proxy.fullname" . }}
+    app: {{ template "stolon.proxy.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    component: proxy
 spec:
   replicas: {{ .Values.proxy.replicas }}
   template:
     metadata:
       labels:
-        app: {{ template "proxy.fullname" . }}
+        app: {{ template "stolon.proxy.fullname" . }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
+        component: proxy
         stolon-cluster: {{ .Values.clusterName }}
-        stolon-proxy: "true"
     spec:
+
+{{- if .Values.proxy.affinity }}
+      affinity:
+{{ toYaml .Values.proxy.affinity | indent 8 }}
+{{- end }}
+
+{{- if .Values.proxy.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.proxy.nodeSelector | indent 8 }}
+{{- end }}
+
+{{- if .Values.proxy.tolerations }}
+      tolerations:
+{{ toYaml .Values.proxy.tolerations | indent 8 }}
+{{- end }}
+
       containers:
-      - name: stolon-proxy
+      - name: {{ template "stolon.proxy.fullname" . }}
         image: "{{ .Values.image }}:{{ .Values.imageTag }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         command:
@@ -40,10 +57,10 @@ spec:
           - name: STSENTINEL_DEBUG
             value: {{ .Values.debug | quote}}
         ports:
-          - containerPort: 5432
+          - containerPort: {{ .Values.ports.internalPort }}
         readinessProbe:
           tcpSocket:
-            port: 5432
+            port: {{ .Values.ports.internalPort }}
           initialDelaySeconds: 10
           timeoutSeconds: 5
         resources:

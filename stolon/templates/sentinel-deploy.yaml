@@ -1,26 +1,44 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "sentinel.fullname" . }}
+  name: {{ template "stolon.sentinel.fullname" . }}
   labels:
-    app: {{ template "sentinel.fullname" . }}
+    app: {{ template "stolon.sentinel.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    component: sentinel
 spec:
   replicas: {{ .Values.sentinel.replicas }}
   template:
     metadata:
       labels:
-        app: {{ template "sentinel.fullname" . }}
+        app: {{ template "stolon.sentinel.fullname" . }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
+        component: sentinel
         stolon-cluster: {{ .Values.clusterName | quote}}
         stolon-sentinel: "true"
     spec:
+
+{{- if .Values.sentinel.affinity }}
+      affinity:
+{{ toYaml .Values.sentinel.affinity | indent 8 }}
+{{- end }}
+
+{{- if .Values.sentinel.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.sentinel.nodeSelector | indent 8 }}
+{{- end }}
+
+{{- if .Values.sentinel.tolerations }}
+      tolerations:
+{{ toYaml .Values.sentinel.tolerations | indent 8 }}
+{{- end }}
+
       containers:
-      - name: stolon-sentinel
+      - name: {{ template "stolon.sentinel.fullname" . }}
         image: "{{ .Values.image }}:{{ .Values.imageTag }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         command:
@@ -38,4 +56,4 @@ spec:
           - name: STSENTINEL_DEBUG
             value: {{ .Values.debug | quote}}
         resources:
-{{ toYaml .Values.keeper.resources | indent 10 }}
+{{ toYaml .Values.sentinel.resources | indent 10 }}

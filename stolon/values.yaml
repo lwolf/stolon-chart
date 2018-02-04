@@ -32,21 +32,28 @@ slow_queries:
   enabled: false
   min_duration: 300
 
+ports:
+  internalPort: 5432
+  externalPort: 5432
+
 store:
   ##  Backend could be one of the following:
   ## - etcd
   ## - consul (should work, but not tested yet)
   backend: "etcd"
   ## store endpoints MUST be set!
-  endpoints: "http://etcd-01:2379,http://etcd-02:2379"
+  endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
 
 pgReplUsername: "repluser"
-pgReplPassword: "replPassword"
+## set password for the repluser
+## default is 40 random chars
+#pgReplPassword: "replPassword"
+
 pgSuperuserName: "stolon"
 
 ## set password for the superuser
-## default is 15 random chars
-# pgSuperuserPasword: ""
+## default is 40 random chars
+# pgSuperuserPassword: ""
 
 sentinel:
   replicas: 3
@@ -60,6 +67,13 @@ sentinel:
       cpu: "100m"
       memory: "512Mi"
 
+  ## Configure nodeSelector, tolerations and affinity.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
+  ##
+
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
 
 proxy:
   replicas: 3
@@ -75,6 +89,14 @@ proxy:
     requests:
       cpu: "100m"
       memory: "512Mi"
+
+  ## Configure nodeSelector, tolerations and affinity.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
+  ##
+
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
 
 keeper:
   replicas: 3
@@ -99,6 +121,14 @@ keeper:
       cpu: "100m"
       memory: "512Mi"
 
+  ## Configure nodeSelector, tolerations and affinity.
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
+  ##
+
+  affinity: {}
+  nodeSelector: {}
+  tolerations: []
+
 ## Persistent Volume Storage configuration.
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes
 ##
@@ -108,16 +138,12 @@ persistence:
   ##
   enabled: false
 
-  ## Persistent Volume Storage Class Version.
-  ##
-  classVersion: beta
-  ## Persistent Volume Storage Class.
-  ##
-  class: slow
-
   ## Persistent Volume Access Mode.
   ##
   accessMode: ReadWriteOnce
+
+  ## Persistant Volume Storage Class Name
+  storageClassName: standard
 
   ## Persistent Volume Storage Size.
   ##
