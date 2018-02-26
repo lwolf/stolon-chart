@@ -57,7 +57,7 @@ spec:
             exec gosu stolon stolon-keeper --data-dir $STOLON_DATA
         env:
           - name: STKEEPER_CLUSTER_NAME
-            value: {{ .Values.clusterName  | quote}}
+            value: {{ template "stolon.clusterName" . }}
           - name: STKEEPER_STORE_BACKEND
             value: {{ .Values.store.backend  | quote}}
           - name: STKEEPER_STORE_ENDPOINTS

@@ -23,7 +23,8 @@ imageTag: "v0.7.0-pg9.6"
 
 ## Configuration values for Stolon.
 
-clusterName: "kube-stolon"
+# Set custom stolon cluster name
+# clusterName: "kube-stolon"
 debug: false
 
 ## log slow queries

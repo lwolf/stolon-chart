@@ -27,7 +27,7 @@ Currently only etcd backend is supported.
 
 
 
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
+## Support the project
+If you want to support the project, you can do it using BeerPays
 
 [![Beerpay](https://beerpay.io/lwolf/stolon-chart/badge.svg?style=beer-square)](https://beerpay.io/lwolf/stolon-chart)  [![Beerpay](https://beerpay.io/lwolf/stolon-chart/make-wish.svg?style=flat-square)](https://beerpay.io/lwolf/stolon-chart?focus=wish)

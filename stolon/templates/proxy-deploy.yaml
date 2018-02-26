@@ -18,7 +18,7 @@ spec:
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
         component: proxy
-        stolon-cluster: {{ .Values.clusterName }}
+        stolon-cluster: {{ template "stolon.clusterName" . }}
     spec:
 
 {{- if .Values.proxy.affinity }}
@@ -47,7 +47,7 @@ spec:
             exec gosu stolon stolon-proxy
         env:
           - name: STPROXY_CLUSTER_NAME
-            value: {{ .Values.clusterName | quote}}
+            value: {{ template "stolon.clusterName" . }}
           - name: STPROXY_STORE_BACKEND
             value: {{ .Values.store.backend | quote}}
           - name: STPROXY_STORE_ENDPOINTS
