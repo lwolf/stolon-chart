@@ -14,7 +14,7 @@ image: "sorintlab/stolon"
 ## Stolon image version.
 ## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
 ##
-imageTag: "v0.7.0-pg9.6"
+imageTag: "v0.9.0-pg9.6"
 
 ## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
 ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -39,9 +39,10 @@ ports:
 
 store:
   ##  Backend could be one of the following:
-  ## - etcd
+  ## - etcdv2
+  ## - etcdv3
   ## - consul (should work, but not tested yet)
-  backend: "etcd"
+  backend: "etcdv3"
   ## store endpoints MUST be set!
   endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
 
