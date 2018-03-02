@@ -22,11 +22,6 @@ Currently only etcd backend is supported.
 - [X] Add support for 1.6
 
 
-## Known issues
-* etcd from the incubator(and the copy here) has problems with **scale down** and re-joining fallen pods. [#685](https://github.com/kubernetes/charts/issues/685)
-
-
-
 ## Support the project
 If you want to support the project, you can do it using BeerPays
 
