@@ -17,4 +17,4 @@ spec:
       targetPort: {{ .Values.ports.internalPort }}
   selector:
     component: proxy
-    stolon-cluster: {{ .Values.clusterName }}
+    stolon-cluster: {{ template "stolon.clusterName" . }}

@@ -26,7 +26,7 @@ spec:
                   "imagePullPolicy": {{ default "Always" .Values.imagePullPolicy | quote }}
               }
           ]'
-        {{ end }}
+        {{- end }}
     spec:
       restartPolicy: Never
       containers:
@@ -38,7 +38,11 @@ spec:
           - init
           - --cluster-name={{ template "stolon.clusterName" . }}
           - --store-backend={{ .Values.store.backend }}
+          {{- if eq .Values.store.backend "kubernetes" }}
+          - --kube-resource-kind={{ .Values.store.kubeRessourceKind }}
+          {{- else }}
           - --store-endpoints={{ .Values.store.endpoints }}
+          {{- end }}
           - --yes
           - '{  "initMode": "new"{{- if or .Values.keeper.client_ssl.enabled .Values.slow_queries.enabled }}, "pgParameters": { {{- if .Values.keeper.client_ssl.enabled }} "ssl": "on", "ssl_cert_file": "/etc/secrets/ssl/server.crt", "ssl_key_file": "/etc/secrets/ssl/server.key"{{- end }}{{- if and .Values.keeper.client_ssl.enabled .Values.slow_queries.enabled }},{{- end }}{{ if .Values.slow_queries.enabled }} "log_min_duration_statement" :  "{{ .Values.slow_queries.min_duration }}" {{ end }} }{{- end}} }'
 {{ end }}

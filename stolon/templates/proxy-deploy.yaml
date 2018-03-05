@@ -46,15 +46,24 @@ spec:
           - |
             exec gosu stolon stolon-proxy
         env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: STPROXY_CLUSTER_NAME
             value: {{ template "stolon.clusterName" . }}
           - name: STPROXY_STORE_BACKEND
             value: {{ .Values.store.backend | quote}}
+          {{- if eq .Values.store.backend "kubernetes" }}
+          - name: STPROXY_KUBE_RESOURCE_KIND
+            value: {{ .Values.store.kubeRessourceKind  | quote}}
+          {{- else }}
           - name: STPROXY_STORE_ENDPOINTS
-            value: {{ .Values.store.endpoints | quote }}
+            value: {{ .Values.store.endpoints | quote}}
+          {{- end }}
           - name: STPROXY_LISTEN_ADDRESS
             value: {{ default "0.0.0.0" .Values.proxy.listenAddress | quote }}
-          - name: STSENTINEL_DEBUG
+          - name: STPROXY_DEBUG
             value: {{ .Values.debug | quote}}
         ports:
           - containerPort: {{ .Values.ports.internalPort }}

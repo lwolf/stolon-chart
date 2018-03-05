@@ -13,8 +13,10 @@ image: "sorintlab/stolon"
 
 ## Stolon image version.
 ## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
-##
-imageTag: "v0.9.0-pg9.6"
+#imageTag: "v0.9.0-pg9.6"
+
+## If you'd like to use the new kubernetes backend you need master as no release yet! (Scheduled though, follow https://github.com/sorintlab/stolon/pull/433)
+imageTag: "master-pg9.6"
 
 ## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
 ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -42,9 +44,13 @@ store:
   ## - etcdv2
   ## - etcdv3
   ## - consul (should work, but not tested yet)
-  backend: "etcdv3"
   ## store endpoints MUST be set!
-  endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
+  #backend: "etcdv3"
+  #endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
+
+  ## - kubernetes (should work, use at own risk, new feature as of https://github.com/sorintlab/stolon/pull/433)
+  backend: "kubernetes"
+  kubeRessourceKind: "configmap"
 
 pgReplUsername: "repluser"
 ## set password for the repluser
@@ -58,7 +64,7 @@ pgSuperuserName: "stolon"
 # pgSuperuserPassword: ""
 
 sentinel:
-  replicas: 3
+  replicas: 1
 
   ## Configure resource requests and limits.
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -78,7 +84,7 @@ sentinel:
   tolerations: []
 
 proxy:
-  replicas: 3
+  replicas: 1
   ## Set serviceType to nodePort if needed
   ## proxy is used to route RW requests to the master
   # serviceType: NodePort
@@ -101,7 +107,7 @@ proxy:
   tolerations: []
 
 keeper:
-  replicas: 3
+  replicas: 1
   ## Set serviceType to nodePort if needed
   ## keeper service is used to route RO requests to all nodes
   # serviceType: NodePort
@@ -138,7 +144,7 @@ keeper:
 persistence:
   ## Enable persistence using Persistent Volume Claims.
   ##
-  enabled: false
+  enabled: true
 
   ## Persistent Volume Access Mode.
   ##
@@ -149,4 +155,4 @@ persistence:
 
   ## Persistent Volume Storage Size.
   ##
-  size: 10Gi
+  size: 512Mi
