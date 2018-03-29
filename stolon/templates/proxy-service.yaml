@@ -16,5 +16,11 @@ spec:
     - port: {{ .Values.ports.externalPort }}
       targetPort: {{ .Values.ports.internalPort }}
   selector:
+    # Due to https://github.com/sorintlab/stolon/pull/433/commits/38ae6b13b5e161a5bfe0fbe01084ca060eaf2e76#diff-95cdd374e9440fde010ff35d65f8cf3fR54
+    {{- if eq .Values.store.backend "kubernetes" }}
+    app: "stolon-proxy"
+    {{- else }}
+    app: {{ template "stolon.proxy.fullname" . }}
+    {{- end }}
     component: proxy
     stolon-cluster: {{ template "stolon.clusterName" . }}

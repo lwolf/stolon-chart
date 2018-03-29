@@ -31,6 +31,16 @@ $ helm dep build
 $ helm install --name my-release .
 ```
 
+### Experimental kubernetes backend:
+
+```bash
+$ git clone https://github.com/lwolf/stolon-chart
+$ cd stolon-chart
+$ helm dep build
+$ helm install --name my-release . --set store.backend=kubernetes,store.kubeRessourceKind=configmap,imageTag=master-pg9.6
+```
+Or change them in your values.yml accordingly.
+
 ## Configuration
 
 The following tables lists the configurable parameters of the helm chart and their default values.
@@ -42,7 +52,7 @@ The following tables lists the configurable parameters of the helm chart and the
 | `imagePullPolicy`                       | Image pull policy                              | `Always` if `imageTag` is `latest`, else `IfNotPresent`      |
 | `clusterName`                           | Name of the cluster                            | `kube-stolon`                                                |
 | `debug`                                 | Debug mode                                     | `false`                                                      |
-| `store.backend`                         | Store backend to use (etcd/consul)             | `etcd`                                                       |
+| `store.backend`                         | Store backend to use (etcd/consul/kubernetes)  | `etcd`                                                       |
 | `store.endpoints`                       | Store backend endpoints                        | `http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379`   |
 | `pgReplUsername`                        | Repl username                                  | `repluser`                                                   |
 | `pgReplPassword`                        | Repl password                                  | random 40 characters                                         |
