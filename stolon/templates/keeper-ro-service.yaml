@@ -3,11 +3,10 @@ kind: Service
 metadata:
   name: {{ template "stolon.keeper.fullname" . }}
   labels:
-    app: {{ template "stolon.keeper.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: "stolon-keeper"
     release: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: "{{ .Release.Service }}"
-    component: keeper
 spec:
   {{ if .Values.keeper.serviceType }}
   type: {{ .Values.keeper.serviceType }}
@@ -16,11 +15,7 @@ spec:
     - port: {{ .Values.ports.externalPort }}
       targetPort: {{ .Values.ports.internalPort }}
   selector:
-    # Due to https://github.com/sorintlab/stolon/pull/433/commits/38ae6b13b5e161a5bfe0fbe01084ca060eaf2e76#diff-95cdd374e9440fde010ff35d65f8cf3fR54
-    {{- if eq .Values.store.backend "kubernetes" }}
     app: "stolon-keeper"
-    {{- else }}
-    app: {{ template "stolon.keeper.fullname" . }}
-    {{- end }}
+    release: "{{ .Release.Name }}"
     component: keeper
     stolon-cluster: {{ template "stolon.clusterName" . }}

@@ -34,10 +34,8 @@ $ helm install --name my-release .
 ### Experimental kubernetes backend:
 
 ```bash
-$ git clone https://github.com/lwolf/stolon-chart
-$ cd stolon-chart
-$ helm dep build
-$ helm install --name my-release . --set store.backend=kubernetes,store.kubeRessourceKind=configmap,imageTag=master-pg9.6
+# You need to set the backend to type kubernetes
+$ helm install --name my-release . --set store.backend=kubernetes
 ```
 Or change them in your values.yml accordingly.
 
@@ -54,6 +52,7 @@ The following tables lists the configurable parameters of the helm chart and the
 | `debug`                                 | Debug mode                                     | `false`                                                      |
 | `store.backend`                         | Store backend to use (etcd/consul/kubernetes)  | `etcd`                                                       |
 | `store.endpoints`                       | Store backend endpoints                        | `http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379`   |
+| `store.kubeResourceKind`                | Kubernetes resource kind (only for kubernetes) | `configmap`                                                  |
 | `pgReplUsername`                        | Repl username                                  | `repluser`                                                   |
 | `pgReplPassword`                        | Repl password                                  | random 40 characters                                         |
 | `pgSuperuserName`                       | Postgres Superuser name                        | `stolon`                                                     |

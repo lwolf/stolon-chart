@@ -39,7 +39,7 @@ spec:
           - --cluster-name={{ template "stolon.clusterName" . }}
           - --store-backend={{ .Values.store.backend }}
           {{- if eq .Values.store.backend "kubernetes" }}
-          - --kube-resource-kind={{ .Values.store.kubeRessourceKind }}
+          - --kube-resource-kind={{ default "configmap" .Values.store.kubeResourceKind }}
           {{- else }}
           - --store-endpoints={{ .Values.store.endpoints }}
           {{- end }}

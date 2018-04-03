@@ -3,26 +3,18 @@ kind: StatefulSet
 metadata:
   name: {{ template "stolon.keeper.fullname" . }}
   labels:
-    app: {{ template "stolon.keeper.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app: "stolon-keeper"
     release: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: "{{ .Release.Service }}"
-    component: keeper
 spec:
   serviceName: {{ template "stolon.keeper.fullname" . }}
   replicas: {{ .Values.keeper.replicas }}
   template:
     metadata:
       labels:
-        # Due to https://github.com/sorintlab/stolon/pull/433/commits/38ae6b13b5e161a5bfe0fbe01084ca060eaf2e76#diff-95cdd374e9440fde010ff35d65f8cf3fR54
-        {{- if eq .Values.store.backend "kubernetes" }}
         app: "stolon-keeper"
-        {{- else }}
-        app: {{ template "stolon.keeper.fullname" . }}
-        {{- end }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
         component: keeper
         stolon-cluster: {{ template "stolon.clusterName" . }}
       annotations:
@@ -72,7 +64,7 @@ spec:
             value: {{ .Values.store.backend  | quote}}
           {{- if eq .Values.store.backend "kubernetes" }}
           - name: STKEEPER_KUBE_RESOURCE_KIND
-            value: {{ .Values.store.kubeRessourceKind  | quote}}
+            value: {{ default "configmap" .Values.store.kubeResourceKind  | quote}}
           {{- else }}
           - name: STKEEPER_STORE_ENDPOINTS
             value: {{ .Values.store.endpoints | quote}}
@@ -85,7 +77,7 @@ spec:
             value: {{ .Values.pgSuperuserName  | quote}}
           - name: STKEEPER_PG_SU_PASSWORDFILE
             value: "/etc/secrets/stolon/pg_su_password"
-          - name: STKEPPER_DEBUG
+          - name: STKEEPER_DEBUG
             value: {{ .Values.debug | quote}}
         ports:
           - containerPort: {{ .Values.ports.internalPort }}
