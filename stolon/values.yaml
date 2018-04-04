@@ -42,12 +42,10 @@ store:
   ## - etcdv2
   ## - etcdv3
   ## - consul (should work, but not tested yet)
+  ## - kubernetes (should work, but not tested yet)
   backend: "etcdv3"
   ## store endpoints MUST be set!
   endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
-  ## for kubernetes backend (experimental)
-  # backend: "kubernetes"
-  # kubeResourceKind: "configmap"
 
 pgReplUsername: "repluser"
 ## set password for the repluser
