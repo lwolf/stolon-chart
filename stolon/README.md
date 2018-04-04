@@ -78,6 +78,9 @@ The following tables lists the configurable parameters of the helm chart and the
 | `persistence.storageClassName`          | Storage class name of backing PVC              | `standard`                                                   |
 | `persistence.accessMode`                | Use volume as ReadOnly or ReadWrite            | `ReadWriteOnce`                                              |
 | `persistence.size`                      | Size of data volume                            | `10Gi`                                                       |
+| `rbac.create`                           | Specifies if RBAC resources should be created  | `true`                                                       |
+| `serviceAccount.create`                 | Specifies if ServiceAccount should be created  | `true`                                                       |
+| `serviceAccount.name  `                 | Name of the generated serviceAccount           | Defaults to fullname template                                |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

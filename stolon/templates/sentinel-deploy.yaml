@@ -18,7 +18,7 @@ spec:
         stolon-cluster: {{ template "stolon.clusterName" . }}
         stolon-sentinel: "true"
     spec:
-
+      serviceAccountName: {{ template "stolon.serviceAccountName" . }}
 {{- if .Values.sentinel.affinity }}
       affinity:
 {{ toYaml .Values.sentinel.affinity | indent 8 }}

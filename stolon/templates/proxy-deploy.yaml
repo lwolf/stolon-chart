@@ -17,7 +17,7 @@ spec:
         component: proxy
         stolon-cluster: {{ template "stolon.clusterName" . }}
     spec:
-
+      serviceAccountName: {{ template "stolon.serviceAccountName" . }}
 {{- if .Values.proxy.affinity }}
       affinity:
 {{ toYaml .Values.proxy.affinity | indent 8 }}

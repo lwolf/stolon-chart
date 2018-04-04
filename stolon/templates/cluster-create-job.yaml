@@ -28,6 +28,7 @@ spec:
           ]'
         {{- end }}
     spec:
+      serviceAccountName: {{ template "stolon.serviceAccountName" . }}
       restartPolicy: Never
       containers:
       - name: {{ template "stolon.fullname" . }}
