@@ -31,6 +31,14 @@ $ helm dep build
 $ helm install --name my-release .
 ```
 
+### Experimental kubernetes backend:
+
+```bash
+# You need to set the backend to type kubernetes
+$ helm install --name my-release . --set store.backend=kubernetes
+```
+Or change them in your values.yml accordingly.
+
 ## Configuration
 
 The following tables lists the configurable parameters of the helm chart and their default values.
@@ -42,8 +50,9 @@ The following tables lists the configurable parameters of the helm chart and the
 | `imagePullPolicy`                       | Image pull policy                              | `Always` if `imageTag` is `latest`, else `IfNotPresent`      |
 | `clusterName`                           | Name of the cluster                            | `kube-stolon`                                                |
 | `debug`                                 | Debug mode                                     | `false`                                                      |
-| `store.backend`                         | Store backend to use (etcd/consul)             | `etcd`                                                       |
+| `store.backend`                         | Store backend to use (etcd/consul/kubernetes)  | `etcd`                                                       |
 | `store.endpoints`                       | Store backend endpoints                        | `http://etcd-0:2379,http://etcd-1:2379,http://etcd-2:2379`   |
+| `store.kubeResourceKind`                | Kubernetes resource kind (only for kubernetes) | `configmap`                                                  |
 | `pgReplUsername`                        | Repl username                                  | `repluser`                                                   |
 | `pgReplPassword`                        | Repl password                                  | random 40 characters                                         |
 | `pgSuperuserName`                       | Postgres Superuser name                        | `stolon`                                                     |
@@ -69,6 +78,9 @@ The following tables lists the configurable parameters of the helm chart and the
 | `persistence.storageClassName`          | Storage class name of backing PVC              | `standard`                                                   |
 | `persistence.accessMode`                | Use volume as ReadOnly or ReadWrite            | `ReadWriteOnce`                                              |
 | `persistence.size`                      | Size of data volume                            | `10Gi`                                                       |
+| `rbac.create`                           | Specifies if RBAC resources should be created  | `true`                                                       |
+| `serviceAccount.create`                 | Specifies if ServiceAccount should be created  | `true`                                                       |
+| `serviceAccount.name  `                 | Name of the generated serviceAccount           | Defaults to fullname template                                |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 

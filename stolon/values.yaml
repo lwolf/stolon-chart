@@ -14,7 +14,7 @@ image: "sorintlab/stolon"
 ## Stolon image version.
 ## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
 ##
-imageTag: "v0.9.0-pg9.6"
+imageTag: "v0.10.0-pg9.6"
 
 ## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
 ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -42,6 +42,7 @@ store:
   ## - etcdv2
   ## - etcdv3
   ## - consul (should work, but not tested yet)
+  ## - kubernetes (should work, but not tested yet)
   backend: "etcdv3"
   ## store endpoints MUST be set!
   endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
@@ -150,3 +151,14 @@ persistence:
   ## Persistent Volume Storage Size.
   ##
   size: 10Gi
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  # name: my-name

@@ -4,24 +4,25 @@ metadata:
   name: {{ template "stolon.keeper.fullname" . }}
   labels:
     app: {{ template "stolon.keeper.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: keeper
+    heritage: "{{ .Release.Service }}"
 spec:
   serviceName: {{ template "stolon.keeper.fullname" . }}
   replicas: {{ .Values.keeper.replicas }}
   template:
     metadata:
       labels:
-        app: {{ template "stolon.keeper.fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app: "stolon-keeper"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: keeper
+        stolon-cluster: {{ template "stolon.clusterName" . }}
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"
     spec:
+      serviceAccountName: {{ template "stolon.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
 
 {{- if .Values.keeper.affinity }}
@@ -56,12 +57,21 @@ spec:
             chown stolon:stolon $STOLON_DATA
             exec gosu stolon stolon-keeper --data-dir $STOLON_DATA
         env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: STKEEPER_CLUSTER_NAME
             value: {{ template "stolon.clusterName" . }}
           - name: STKEEPER_STORE_BACKEND
             value: {{ .Values.store.backend  | quote}}
+          {{- if eq .Values.store.backend "kubernetes" }}
+          - name: STKEEPER_KUBE_RESOURCE_KIND
+            value: {{ default "configmap" .Values.store.kubeResourceKind  | quote}}
+          {{- else }}
           - name: STKEEPER_STORE_ENDPOINTS
             value: {{ .Values.store.endpoints | quote}}
+          {{- end }}
           - name: STKEEPER_PG_REPL_USERNAME
             value: {{ .Values.pgReplUsername  | quote}}
           - name: STKEEPER_PG_REPL_PASSWORDFILE
@@ -70,7 +80,7 @@ spec:
             value: {{ .Values.pgSuperuserName  | quote}}
           - name: STKEEPER_PG_SU_PASSWORDFILE
             value: "/etc/secrets/stolon/pg_su_password"
-          - name: STSENTINEL_DEBUG
+          - name: STKEEPER_DEBUG
             value: {{ .Values.debug | quote}}
         ports:
           - containerPort: {{ .Values.ports.internalPort }}

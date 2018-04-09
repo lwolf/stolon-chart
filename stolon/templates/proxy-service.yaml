@@ -4,10 +4,10 @@ metadata:
   name: {{ template "stolon.proxy.fullname" . }}
   labels:
     app: {{ template "stolon.proxy.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: proxy
+    heritage: "{{ .Release.Service }}"
 spec:
   {{ if .Values.proxy.serviceType }}
   type: {{ .Values.proxy.serviceType }}
@@ -16,5 +16,8 @@ spec:
     - port: {{ .Values.ports.externalPort }}
       targetPort: {{ .Values.ports.internalPort }}
   selector:
+    app: "stolon-proxy"
+    release: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: proxy
-    stolon-cluster: {{ .Values.clusterName }}
+    stolon-cluster: {{ template "stolon.clusterName" . }}

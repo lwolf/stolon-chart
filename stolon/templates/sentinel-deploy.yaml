@@ -4,24 +4,23 @@ metadata:
   name: {{ template "stolon.sentinel.fullname" . }}
   labels:
     app: {{ template "stolon.sentinel.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: sentinel
+    heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.sentinel.replicas }}
   template:
     metadata:
       labels:
-        app: {{ template "stolon.sentinel.fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app: "stolon-sentinel"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: sentinel
         stolon-cluster: {{ template "stolon.clusterName" . }}
         stolon-sentinel: "true"
     spec:
-
+      serviceAccountName: {{ template "stolon.serviceAccountName" . }}
 {{- if .Values.sentinel.affinity }}
       affinity:
 {{ toYaml .Values.sentinel.affinity | indent 8 }}
@@ -47,12 +46,21 @@ spec:
           - |
             exec gosu stolon stolon-sentinel
         env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: STSENTINEL_CLUSTER_NAME
             value: {{ template "stolon.clusterName" .}}
           - name: STSENTINEL_STORE_BACKEND
             value: {{ .Values.store.backend | quote}}
+          {{- if eq .Values.store.backend "kubernetes" }}
+          - name: STSENTINEL_KUBE_RESOURCE_KIND
+            value: {{ default "configmap" .Values.store.kubeResourceKind  | quote}}
+          {{- else }}
           - name: STSENTINEL_STORE_ENDPOINTS
             value: {{ .Values.store.endpoints | quote}}
+          {{- end }}
           - name: STSENTINEL_DEBUG
             value: {{ .Values.debug | quote}}
         resources:

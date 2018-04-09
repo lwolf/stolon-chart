@@ -4,23 +4,22 @@ metadata:
   name: {{ template "stolon.proxy.fullname" . }}
   labels:
     app: {{ template "stolon.proxy.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: proxy
+    heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.proxy.replicas }}
   template:
     metadata:
       labels:
-        app: {{ template "stolon.proxy.fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app: "stolon-proxy"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: proxy
         stolon-cluster: {{ template "stolon.clusterName" . }}
     spec:
-
+      serviceAccountName: {{ template "stolon.serviceAccountName" . }}
 {{- if .Values.proxy.affinity }}
       affinity:
 {{ toYaml .Values.proxy.affinity | indent 8 }}
@@ -46,15 +45,24 @@ spec:
           - |
             exec gosu stolon stolon-proxy
         env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: STPROXY_CLUSTER_NAME
             value: {{ template "stolon.clusterName" . }}
           - name: STPROXY_STORE_BACKEND
             value: {{ .Values.store.backend | quote}}
+          {{- if eq .Values.store.backend "kubernetes" }}
+          - name: STPROXY_KUBE_RESOURCE_KIND
+            value: {{ default "configmap" .Values.store.kubeResourceKind  | quote}}
+          {{- else }}
           - name: STPROXY_STORE_ENDPOINTS
-            value: {{ .Values.store.endpoints | quote }}
+            value: {{ .Values.store.endpoints | quote}}
+          {{- end }}
           - name: STPROXY_LISTEN_ADDRESS
             value: {{ default "0.0.0.0" .Values.proxy.listenAddress | quote }}
-          - name: STSENTINEL_DEBUG
+          - name: STPROXY_DEBUG
             value: {{ .Values.debug | quote}}
         ports:
           - containerPort: {{ .Values.ports.internalPort }}

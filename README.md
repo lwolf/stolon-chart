@@ -19,6 +19,7 @@ Currently only etcd backend is supported.
 - [X] Automate initial stolon cluster creating
 - [X] Do not manage etcd dependency, do not rely on etcd chart
 - [ ] Add support for consul backend
+- [X] Add support for kubernetes backend (experimental)
 - [X] Add support for 1.6
 
 
