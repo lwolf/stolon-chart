@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ template "stolon.keeper.fullname" . }}
   labels:
-    app: "stolon-keeper"
+    app: {{ template "stolon.keeper.fullname" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: "{{ .Release.Service }}"
