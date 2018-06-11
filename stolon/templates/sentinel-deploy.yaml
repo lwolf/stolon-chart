@@ -6,17 +6,17 @@ metadata:
     app: {{ template "stolon.sentinel.fullname" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: sentinel
+    component: "stolon-sentinel"
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.sentinel.replicas }}
   template:
     metadata:
       labels:
-        app: "stolon-sentinel"
+        app: {{ template "stolon.sentinel.fullname" . }}
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        component: sentinel
+        component: "stolon-sentinel"
         stolon-cluster: {{ template "stolon.clusterName" . }}
         stolon-sentinel: "true"
     spec:

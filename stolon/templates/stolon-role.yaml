@@ -4,7 +4,7 @@ kind: Role
 metadata:
   name: {{ template "stolon.fullname" . }}
   labels:
-    app: "stolon"
+    app: {{ template "stolon.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}

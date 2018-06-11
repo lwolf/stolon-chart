@@ -6,7 +6,7 @@ metadata:
     app: {{ template "stolon.keeper.fullname" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: keeper
+    component: "stolon-keeper"
     heritage: "{{ .Release.Service }}"
 spec:
   serviceName: {{ template "stolon.keeper.fullname" . }}
@@ -14,10 +14,10 @@ spec:
   template:
     metadata:
       labels:
-        app: "stolon-keeper"
+        app: {{ template "stolon.keeper.fullname" . }}
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        component: keeper
+        component: "stolon-keeper"
         stolon-cluster: {{ template "stolon.clusterName" . }}
       annotations:
         pod.alpha.kubernetes.io/initialized: "true"

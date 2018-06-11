@@ -6,7 +6,7 @@ metadata:
     app: {{ template "stolon.keeper.fullname" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: keeper
+    component: "stolon-keeper"
     heritage: "{{ .Release.Service }}"
 spec:
   {{ if .Values.keeper.serviceType }}
@@ -16,8 +16,8 @@ spec:
     - port: {{ .Values.ports.externalPort }}
       targetPort: {{ .Values.ports.internalPort }}
   selector:
-    app: "stolon-keeper"
+    app: {{ template "stolon.keeper.fullname" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: keeper
+    component: "stolon-keeper"
     stolon-cluster: {{ template "stolon.clusterName" . }}
