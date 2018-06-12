@@ -4,7 +4,7 @@ kind: RoleBinding
 metadata:
   name: {{ template "stolon.fullname" . }}
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ template "stolon.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}

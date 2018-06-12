@@ -6,17 +6,17 @@ metadata:
     app: {{ template "stolon.proxy.fullname" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: proxy
+    component: "stolon-proxy"
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.proxy.replicas }}
   template:
     metadata:
       labels:
-        app: "stolon-proxy"
+        app: {{ template "stolon.proxy.fullname" . }}
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        component: proxy
+        component: "stolon-proxy"
         stolon-cluster: {{ template "stolon.clusterName" . }}
     spec:
       serviceAccountName: {{ template "stolon.serviceAccountName" . }}

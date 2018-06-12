@@ -14,7 +14,7 @@ image: "sorintlab/stolon"
 ## Stolon image version.
 ## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
 ##
-imageTag: "v0.10.0-pg10"
+imageTag: "v0.11.0-pg10"
 
 ## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
 ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
