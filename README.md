@@ -5,7 +5,7 @@
 > (kubernetes integration) but also on every other kind of infrastructure
 > (cloud IaaS, old style infrastructures etc...)
 
-Chart is partially based on the statefullset example from the [stolon repo](https://github.com/sorintlab/stolon/tree/master/examples/kubernetes/statefulset)
+Chart is partially based on the statefullset example from the [stolon repo](https://github.com/sorintlab/stolon)
 
 Currently only etcd backend is supported.
 
