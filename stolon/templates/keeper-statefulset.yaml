@@ -106,11 +106,13 @@ spec:
         resources:
           requests:
             storage: {{ .Values.persistence.size }}
-  {{- if .Values.persistence.storageClassName }}
-        storageClassName: {{ .Values.persistence.storageClassName | quote }}
+    {{- if .Values.persistentVolume.storageClassName }}
+    {{- if (eq "-" .Values.persistentVolume.storageClassName) }}
+        storageClassName: ""
     {{- else }}
-        storageClassName: default
-  {{- end }}
+        storageClassName: "{{ .Values.persistentVolume.storageClassName }}"
+    {{- end }}
+    {{- end }}
 {{- else }}
         - name: stolon-data
           emptyDir: {}
