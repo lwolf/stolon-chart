@@ -103,6 +103,7 @@ proxy:
 
 keeper:
   replicas: 3
+  uid_prefix: "stolon"
   ## Set serviceType to nodePort if needed
   ## keeper service is used to route RO requests to all nodes
   # serviceType: NodePort
