@@ -7,6 +7,9 @@
 
 Chart is partially based on the statefullset example from the [stolon repo](https://github.com/sorintlab/stolon)
 
+> This chart was accepted to the official kubernetes/charts repository and could be installed from there as well
+> https://github.com/helm/charts/tree/master/stable/stolon
+
 Currently only etcd backend is supported.
 
 ## Requirements

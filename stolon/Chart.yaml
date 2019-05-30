@@ -1,6 +1,8 @@
+apiVersion: v1
 name: stolon
+version: 0.8.0
+appVersion: 0.13.0
 home: https://github.com/sorintlab/stolon
-version: 0.7.1
 description: Stolon Helm Chart for Kubernetes.
 sources:
   - https://github.com/sorintlab/stolon

@@ -3,6 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "stolon.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "stolon.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"

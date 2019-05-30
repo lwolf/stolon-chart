@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "stolon.sentinel.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "stolon.sentinel.fullname" . }}
     release: "{{ .Release.Name }}"
