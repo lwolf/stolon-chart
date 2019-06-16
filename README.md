@@ -7,7 +7,7 @@
 
 Chart is partially based on the statefullset example from the [stolon repo](https://github.com/sorintlab/stolon)
 
-> This chart was accepted to the official kubernetes/charts repository and could be installed from there as well, but chart are not in sync anymore.
+> This chart was accepted to the official kubernetes/charts repository and could be installed from there as well, but **chart are not interchangeable**.
 > https://github.com/helm/charts/tree/master/stable/stolon
 
 
