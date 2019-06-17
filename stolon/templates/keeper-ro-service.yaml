@@ -4,7 +4,7 @@ metadata:
   name: {{ template "stolon.keeper.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "stolon.keeper.fullname" . }}
+    app: {{ template "stolon.name" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: "stolon-keeper"
@@ -17,7 +17,7 @@ spec:
     - port: {{ .Values.ports.externalPort }}
       targetPort: {{ .Values.ports.internalPort }}
   selector:
-    app: {{ template "stolon.keeper.fullname" . }}
+    app: {{ template "stolon.name" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: "stolon-keeper"

@@ -4,7 +4,7 @@ metadata:
   name: {{ template "stolon.sentinel.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "stolon.sentinel.fullname" . }}
+    app: {{ template "stolon.name" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: "stolon-sentinel"
@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "stolon.sentinel.fullname" . }}
+        app: {{ template "stolon.name" . }}
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: "stolon-sentinel"
