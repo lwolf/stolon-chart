@@ -4,7 +4,7 @@ metadata:
   name: {{ template "stolon.proxy.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "stolon.proxy.fullname" . }}
+    app: {{ template "stolon.name" . }}
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     component: "stolon-proxy"
@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "stolon.proxy.fullname" . }}
+        app: {{ template "stolon.name" . }}
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         component: "stolon-proxy"
