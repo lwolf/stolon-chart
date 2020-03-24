@@ -13,7 +13,11 @@ spec:
   replicas: {{ .Values.proxy.replicas }}
   selector:
     matchLabels:
-      app: {{ template "stolon.name" . }}
+        app: {{ template "stolon.proxy.fullname" . }}
+        release: "{{ .Release.Name }}"
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        component: "stolon-proxy"
+        stolon-cluster: {{ template "stolon.clusterName" . }}
   template:
     metadata:
       labels:

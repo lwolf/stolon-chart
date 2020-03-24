@@ -14,7 +14,11 @@ spec:
   replicas: {{ .Values.keeper.replicas }}
   selector:
     matchLabels:
-      app: {{ template "stolon.name" . }}
+      app: {{ template "stolon.keeper.fullname" . }}
+      release: "{{ .Release.Name }}"
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      component: "stolon-keeper"
+      stolon-cluster: {{ template "stolon.clusterName" . }}
   template:
     metadata:
       labels:

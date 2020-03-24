@@ -13,7 +13,12 @@ spec:
   replicas: {{ .Values.sentinel.replicas }}
   selector:
     matchLabels:
-      app: {{ template "stolon.name" . }}
+      app: {{ template "stolon.sentinel.fullname" . }}
+      release: "{{ .Release.Name }}"
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      component: "stolon-sentinel"
+      stolon-cluster: {{ template "stolon.clusterName" . }}
+      stolon-sentinel: "true"
   template:
     metadata:
       labels:
