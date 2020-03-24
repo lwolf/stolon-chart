@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "stolon.keeper.fullname" . }}
@@ -12,6 +12,9 @@ metadata:
 spec:
   serviceName: {{ template "stolon.keeper.fullname" . }}
   replicas: {{ .Values.keeper.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "stolon.name" . }}
   template:
     metadata:
       labels:
