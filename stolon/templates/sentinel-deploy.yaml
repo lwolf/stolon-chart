@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "stolon.sentinel.fullname" . }}
@@ -11,6 +11,14 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.sentinel.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "stolon.sentinel.fullname" . }}
+      release: "{{ .Release.Name }}"
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      component: "stolon-sentinel"
+      stolon-cluster: {{ template "stolon.clusterName" . }}
+      stolon-sentinel: "true"
   template:
     metadata:
       labels:

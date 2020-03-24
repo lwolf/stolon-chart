@@ -12,7 +12,7 @@ Chart is partially based on the statefullset example from the [stolon repo](http
 
 
 ## Requirements
-* Kubernetes >1.5
+* Kubernetes > v1.17
 * PV support on the underlying infrastructure
 * Helm 2.2.0 (for `conditions and flags` support)
 

@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "stolon.proxy.fullname" . }}
@@ -11,6 +11,13 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: {{ .Values.proxy.replicas }}
+  selector:
+    matchLabels:
+        app: {{ template "stolon.proxy.fullname" . }}
+        release: "{{ .Release.Name }}"
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        component: "stolon-proxy"
+        stolon-cluster: {{ template "stolon.clusterName" . }}
   template:
     metadata:
       labels:
