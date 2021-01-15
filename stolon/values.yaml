@@ -1,165 +1,203 @@
-# Default values for Stolon Helm Chart.
-# This is a YAML-formatted file.
-## Declare variables to be passed into your templates.
+# clusterName:
+image:
+  repository: sorintlab/stolon
+  tag: v0.16.0-pg10
+  pullPolicy: IfNotPresent
+  ## Add secrets manually via kubectl on kubernetes cluster and reference here
+  # pullSecrets:
+  #   - name: "myKubernetesSecret"
 
-## Override the name of the Chart.
-##
-# nameOverride:
+# used by create-cluster-job when store.backend is etcd
+etcdImage:
+  repository: k8s.gcr.io/etcd-amd64
+  tag: 2.3.7
+  pullPolicy: IfNotPresent
 
-## Stolon image.
-##
-
-image: "sorintlab/stolon"
-
-## Stolon image version.
-## ref: https://hub.docker.com/r/sorintlab/stolon/tags/
-##
-imageTag: "v0.13.0-pg11"
-
-## Specify a imagePullPolicy: 'Always' if imageTag is 'latest', else set to 'IfNotPresent'.
-## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-##
-# imagePullPolicy:
-
-## Configuration values for Stolon.
-
-# Set custom stolon cluster name
-# clusterName: "kube-stolon"
 debug: false
 
-## log slow queries
-# disabled by default
-slow_queries:
+# Enable the creation of a shm volume
+shmVolume:
   enabled: false
-  min_duration: 300
-
-ports:
-  internalPort: 5432
-  externalPort: 5432
-
-store:
-  ##  Backend could be one of the following:
-  ## - etcdv2
-  ## - etcdv3
-  ## - consul (should work, but not tested yet)
-  ## - kubernetes (should work, but not tested yet)
-  backend: "kubernetes"
-  ## store endpoints MUST be set for etcd/consul backends
-  #  endpoints: "http://etcd-etcd-0.etcd-etcd:2379,http://etcd-etcd-1.etcd-etcd:2379,http://etcd-etcd-2.etcd-etcd:2379"
-
-pgReplUsername: "repluser"
-## set password for the repluser
-## default is 40 random chars
-#pgReplPassword: "replPassword"
-
-pgSuperuserName: "stolon"
-
-## set password for the superuser
-## default is 40 random chars
-# pgSuperuserPassword: ""
-
-sentinel:
-  replicas: 3
-
-  ## Configure resource requests and limits.
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "512Mi"
-
-  ## Configure nodeSelector, tolerations and affinity.
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
-  ##
-
-  affinity: {}
-  nodeSelector: {}
-  tolerations: []
-
-proxy:
-  replicas: 3
-  ## Set serviceType to nodePort if needed
-  ## proxy is used to route RW requests to the master
-  # serviceType: NodePort
-
-  ## Configure resource requests and limits.
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "512Mi"
-
-  ## Configure nodeSelector, tolerations and affinity.
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
-  ##
-
-  affinity: {}
-  nodeSelector: {}
-  tolerations: []
-
-keeper:
-  replicas: 3
-  uid_prefix: "stolon"
-  ## Set serviceType to nodePort if needed
-  ## keeper service is used to route RO requests to all nodes
-  # serviceType: NodePort
-
-  ## configure ssl for client access
-  # create certificates according to these instructions: https://www.postgresql.org/docs/9.6/static/ssl-tcp.html
-  # to enable encrypted traffic, servert.crt and server.key are required, by that name.
-  # the use of ** Client Certificates ** is not supported
-  client_ssl:
-    enabled: false
-    certs_secret_name: pg-cert-secret
-
-  ## Configure resource requests and limits.
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "512Mi"
-
-  ## Configure nodeSelector, tolerations and affinity.
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node
-  ##
-
-  affinity: {}
-  nodeSelector: {}
-  tolerations: []
-
-## Persistent Volume Storage configuration.
-## ref: https://kubernetes.io/docs/user-guide/persistent-volumes
-##
 
 persistence:
-  ## Enable persistence using Persistent Volume Claims.
+  enabled: true
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
   ##
-  enabled: false
-
-  ## Persistent Volume Access Mode.
-  ##
-  accessMode: ReadWriteOnce
-
-  ## Persistant Volume Storage Class Name
-  # storageClassName: "-"
-
-  ## Persistent Volume Storage Size.
-  ##
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
   size: 10Gi
 
 rbac:
-  # Specifies whether RBAC resources should be created
   create: true
 
 serviceAccount:
-  # Specifies whether a ServiceAccount should be created
   create: true
-  # The name of the ServiceAccount to use.
-  # If not set and create is true, a name is generated using the fullname template
-  # name: my-name
+  # The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template
+  name:
+
+superuserSecret:
+  name: ""
+  usernameKey: pg_su_username
+  passwordKey: pg_su_password
+
+replicationSecret:
+  name: ""
+  usernameKey: pg_repl_username
+  passwordKey: pg_repl_password
+
+superuserPasswordFile:
+
+superuserUsername: "stolon"
+## password for the superuser (REQUIRED if superuserSecret and superuserPasswordFile are not set)
+superuserPassword:
+
+replicationPasswordFile:
+
+replicationUsername: "repluser"
+## password for the replication user (REQUIRED if replicationSecret and replicationPasswordFile are not set)
+replicationPassword:
+
+## backend could be one of the following: consul, etcdv2, etcdv3 or kubernetes
+store:
+  backend: kubernetes
+#  endpoints: "http://stolon-consul:8500"
+  kubeResourceKind: configmap
+
+pgParameters: {}
+  # max_connections: "1000"
+
+ports:
+  stolon:
+    containerPort: 5432
+  metrics:
+    containerPort: 8080
+
+serviceMonitor:
+  # When set to true then use a ServiceMonitor to collect metrics
+  enabled: false
+  # Custom labels to use in the ServiceMonitor to be matched with a specific Prometheus
+  labels: {}
+  # Set the namespace the ServiceMonitor should be deployed to
+  # namespace: default
+  # Set how frequently Prometheus should scrape
+  # interval: 30s
+  # Set timeout for scrape
+  # scrapeTimeout: 10s
+
+job:
+  autoCreateCluster: true
+  autoUpdateClusterSpec: true
+  annotations: {}
+
+clusterSpec: {}
+  # sleepInterval: 1s
+  # maxStandbys: 5
+
+## Enable support ssl into postgres, you must specify the certs.
+## ref: https://www.postgresql.org/docs/10/ssl-tcp.html
+##
+tls:
+  enabled: false
+  rootCa: |-
+  serverCrt: |-
+  serverKey: |-
+
+  # existingSecret: name-of-existing-secret-to-postgresql
+
+keeper:
+  uid_prefix: "keeper"
+  replicaCount: 2
+  annotations: {}
+  resources: {}
+  priorityClassName: ""
+  fsGroup: ""
+  service:
+    type: ClusterIP
+    annotations: {}
+    ports:
+      keeper:
+        port: 5432
+        targetPort: 5432
+        protocol: TCP
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  volumes: []
+  volumeMounts: []
+  hooks:
+    failKeeper:
+      enabled: false
+  podDisruptionBudget:
+    # minAvailable: 1
+    # maxUnavailable: 1
+  extraEnv: []
+  #  - name: STKEEPER_LOG_LEVEL
+  #    value: "info"
+
+proxy:
+  replicaCount: 2
+  annotations: {}
+  resources: {}
+  priorityClassName: ""
+  service:
+    type: ClusterIP
+#    loadBalancerIP: ""
+    annotations: {}
+    ports:
+      proxy:
+        port: 5432
+        targetPort: 5432
+        protocol: TCP
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  podDisruptionBudget:
+    # minAvailable: 1
+    # maxUnavailable: 1
+  extraEnv: []
+  #  - name: STPROXY_LOG_LEVEL
+  #    value: "info"
+  #  - name: STPROXY_TCP_KEEPALIVE_COUNT
+  #    value: "0"
+  #  - name: STPROXY_TCP_KEEPALIVE_IDLE
+  #    value: "0"
+  #  - name: STPROXY_TCP_KEEPALIVE_INTERVAL
+  #    value: "0"
+
+sentinel:
+  replicaCount: 2
+  annotations: {}
+  resources: {}
+  priorityClassName: ""
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  podDisruptionBudget:
+    # minAvailable: 1
+    # maxUnavailable: 1
+  extraEnv: []
+  #  - name: STSENTINEL_LOG_LEVEL
+  #    value: "info"
+
+## initdb scripts
+## Specify dictionary of scripts to be run at first boot, the entry point script is create_script.sh
+## i.e. you can use pgsql to run sql script on the cluster.
+##
+# initdbScripts:
+#   create_script.sh: |
+#      #!/bin/sh
+#      echo "Do something."
+
+## nodePostStart scripts
+## Specify dictionary of scripts to be run at first boot, the entry point script is postStartScript.sh
+## i.e. you can create tablespace directory here.
+##
+# nodePostStartScript:
+#  postStartScript.sh: |
+#    #!/bin/bash
+#     echo "Do something."
